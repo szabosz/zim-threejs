@@ -9,6 +9,8 @@
     <script src="js/THREEx.FullScreen.js"></script>
     <script src="js/KeyboardState.js"></script>
     <script src="js/TorusKnotGeometry.js"></script>
+    <script src="js/TorusKnotGeometry.js"></script>
+    <script src="src/audio/AudioListener.js"></script>
 
     <script>
         window.addEventListener("DOMContentLoaded", () => {
@@ -36,6 +38,20 @@
         	THREEx.FullScreen.bindKey({charCode : 'm'.charCodeAt(0)});
             var keyboard = new KeyboardState();
 
+            var listener = new THREE.AudioListener();
+            camera.add( listener );
+
+            // create a global audio source
+            var sound = new THREE.Audio( listener );
+
+            // load a sound and set it as the Audio object's buffer
+            var audioLoader = new THREE.AudioLoader();
+            audioLoader.load( 'assets/no-disaster.mp3', function( buffer ) {
+                sound.setBuffer( buffer );
+                sound.setLoop( true );
+                sound.setVolume( 0.5 );
+                sound.play();
+            });
 
             // GEOMETRY
             const geometry = new THREE.TorusKnotGeometry(15, 2, 100, 16);
