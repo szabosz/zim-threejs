@@ -48,6 +48,10 @@
             const knot = new THREE.Mesh(geometry, material);
             scene.add(knot);
 
+            const knot2 = new THREE.Mesh(geometry, material);
+            scene.add(knot2)
+            knot2.position.x = 100;
+
             // LIGHT
             const light = new THREE.PointLight(0xffffff);
             light.position.set(100,200,100);
@@ -63,12 +67,18 @@
             	}
 
                 knot.rotation.y += 0.006;
+                knot.rotation.x += 0.004;
 
 
                 renderer.render(scene, camera);
                 requestAnimationFrame(render);
             }
             render();
+
+            console.log(knot.position.x);
+            console.log(knot.position.y);
+            console.log(knot.position.z);
+
         });
     </script>
 
