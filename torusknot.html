@@ -41,11 +41,12 @@
             const geometry = new THREE.TorusKnotGeometry(15, 2, 100, 16);
 
             // MATERIAL
-            const material = new THREE.MeshNormalMaterial(); 
+            const material = new THREE.MeshNormalMaterial(); //colours
+            // const material = new THREE.wireframe("true");
 
             // MESH
-            const cube = new THREE.Mesh(geometry, material);
-            scene.add(cube);
+            const knot = new THREE.Mesh(geometry, material);
+            scene.add(knot);
 
             // LIGHT
             const light = new THREE.PointLight(0xffffff);
@@ -58,10 +59,10 @@
             // ANIMATION
             function render() {
                 if (keyboard.pressed("s")) {
-            		console.log("s pressed");
+            	    console.log("s pressed");
             	}
 
-                cube.rotation.y += 0.006;
+                knot.rotation.y += 0.006;
 
 
                 renderer.render(scene, camera);
