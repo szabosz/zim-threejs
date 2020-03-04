@@ -8,9 +8,14 @@
     <script src="js/THREEx.WindowResize.js"></script>
     <script src="js/THREEx.FullScreen.js"></script>
     <script src="js/KeyboardState.js"></script>
+
+    <!-- SHAPES -->
+    
     <script src="js/TorusKnotGeometry.js"></script>
-    <script src="js/TorusKnotGeometry.js"></script>
-    <script src="src/audio/AudioListener.js"></script>
+    <script src="js/TorusGeometry.js"></script>
+
+    <script src="js/AudioListener.js"></script>
+    <script src="js/Raycaster.js"></script>
 
     <script>
         window.addEventListener("DOMContentLoaded", () => {
@@ -38,35 +43,53 @@
         	THREEx.FullScreen.bindKey({charCode : 'm'.charCodeAt(0)});
             var keyboard = new KeyboardState();
 
-            var listener = new THREE.AudioListener();
-            camera.add( listener );
+            function playAudio(){
+                var listener = new THREE.AudioListener();
+                camera.add( listener );
 
-            // create a global audio source
-            var sound = new THREE.Audio( listener );
+                // create a global audio source
+                var sound = new THREE.Audio( listener );
 
-            // load a sound and set it as the Audio object's buffer
-            var audioLoader = new THREE.AudioLoader();
-            audioLoader.load( 'assets/no-disaster.mp3', function( buffer ) {
-                sound.setBuffer( buffer );
-                sound.setLoop( true );
-                sound.setVolume( 0.5 );
-                sound.play();
-            });
+                // load a sound and set it as the Audio object's buffer
 
+                var audioLoader = new THREE.AudioLoader();
+                audioLoader.load( 'assets/no-disaster.mp3', function( buffer ) {
+                    sound.setBuffer( buffer );
+                    sound.setLoop( true );
+                    sound.setVolume( 0.5 );
+                    sound.play();
+                });
+            }
             // GEOMETRY
-            const geometry = new THREE.TorusKnotGeometry(15, 2, 100, 16);
+            const geometryTorusKnot = new THREE.TorusKnotGeometry(15, 2, 100, 16);
+            var geometryTorus = new THREE.TorusGeometry( 10, 3, 16, 100 );
+            var geometryCylinder = new THREE.CylinderGeometry( 5, 5, 20, 32 );
+
 
             // MATERIAL
-            const material = new THREE.MeshNormalMaterial(); //colours
-            // const material = new THREE.wireframe("true");
-
+            const materialTorusKnot = new THREE.MeshNormalMaterial(); //colours
+            var materialTorus = new THREE.MeshBasicMaterial( { color: 0x639BFF } );
+            var materialCylinder = new THREE.MeshNormalMaterial(); 
             // MESH
-            const knot = new THREE.Mesh(geometry, material);
+            const knot = new THREE.Mesh(geometryTorusKnot, materialTorusKnot);
             scene.add(knot);
 
-            const knot2 = new THREE.Mesh(geometry, material);
+            const knot2 = new THREE.Mesh(geometryTorusKnot, materialTorusKnot);
             scene.add(knot2)
             knot2.position.x = 100;
+
+            var torus = new THREE.Mesh( geometryTorus, materialTorus );
+            scene.add(torus);
+            torus.position.x = -50;
+
+            var cylinder = new THREE.Mesh( geometryCylinder, materialCylinder );
+            scene.add( cylinder );
+            cylinder.position.x = 50;
+            
+            
+            // EVENT LISTENER 
+            window.addEventListener("mousedown", playAudio);
+
 
             // LIGHT
             const light = new THREE.PointLight(0xffffff);
