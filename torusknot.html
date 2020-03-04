@@ -15,7 +15,7 @@
     <script src="js/TorusGeometry.js"></script>
 
     <script src="js/AudioListener.js"></script>
-    <script src="js/Raycaster.js"></script>
+    <!-- <script src="js/Raycaster.js"></script> -->
 
     <script>
         window.addEventListener("DOMContentLoaded", () => {
@@ -31,7 +31,7 @@
             const near = .1;
             const far = 1000;
             const camera = new THREE.PerspectiveCamera(viewAngle, aspectRatio, near, far);
-            camera.position.z = 30; 
+            camera.position.z = 150; 
             
             // RENDERER
             const renderer = new THREE.WebGLRenderer({antialias:true});
@@ -43,23 +43,23 @@
         	THREEx.FullScreen.bindKey({charCode : 'm'.charCodeAt(0)});
             var keyboard = new KeyboardState();
 
-            function playAudio(){
-                var listener = new THREE.AudioListener();
-                camera.add( listener );
+            // function playAudio(){
+            //     var listener = new THREE.AudioListener();
+            //     camera.add( listener );
 
-                // create a global audio source
-                var sound = new THREE.Audio( listener );
+            //     // create a global audio source
+            //     var sound = new THREE.Audio( listener );
 
-                // load a sound and set it as the Audio object's buffer
+            //     // load a sound and set it as the Audio object's buffer
 
-                var audioLoader = new THREE.AudioLoader();
-                audioLoader.load( 'assets/no-disaster.mp3', function( buffer ) {
-                    sound.setBuffer( buffer );
-                    sound.setLoop( true );
-                    sound.setVolume( 0.5 );
-                    sound.play();
-                });
-            }
+            //     var audioLoader = new THREE.AudioLoader();
+            //     audioLoader.load( 'assets/no-disaster.mp3', function( buffer ) {
+            //         sound.setBuffer( buffer );
+            //         sound.setLoop( true );
+            //         sound.setVolume( 0.5 );
+            //         sound.play();
+            //     });
+            // }
             // GEOMETRY
             const geometryTorusKnot = new THREE.TorusKnotGeometry(15, 2, 100, 16);
             var geometryTorus = new THREE.TorusGeometry( 10, 3, 16, 100 );
@@ -68,7 +68,7 @@
 
             // MATERIAL
             const materialTorusKnot = new THREE.MeshNormalMaterial(); //colours
-            var materialTorus = new THREE.MeshBasicMaterial( { color: 0x639BFF } );
+            var materialTorus = new THREE.MeshBasicMaterial( { color: [0x639BFF, 0xFFFF, 0x0000] } );
             var materialCylinder = new THREE.MeshNormalMaterial(); 
             // MESH
             const knot = new THREE.Mesh(geometryTorusKnot, materialTorusKnot);
@@ -88,7 +88,7 @@
             
             
             // EVENT LISTENER 
-            window.addEventListener("mousedown", playAudio);
+            // window.addEventListener("mousedown", playAudio);
 
 
             // LIGHT
@@ -108,25 +108,76 @@
                 knot.rotation.y += 0.006;
                 knot.rotation.x += 0.004;
 
+                knot2.rotation.y -= 0.006;
+                knot2.rotation.x += 0.004;
+
+                torus.rotation.y -= 0.003;
+                torus.rotation.x += 0.006;
+
+                cylinder.rotation.y -= 0.002;
+                cylinder.rotation.x += 0.001;
+
 
                 renderer.render(scene, camera);
                 requestAnimationFrame(render);
             }
             render();
 
-            console.log(knot.position.x);
-            console.log(knot.position.y);
-            console.log(knot.position.z);
+            // console.log(knot.position.x);
+            // console.log(knot.position.y);
+            // console.log(knot.position.z);
+
+            // create an AudioListener and add it to the camera
+            var listener = new THREE.AudioListener();
+            camera.add( listener );
+            // create the PositionalAudio object (passing in the listener)
+            var sound = new THREE.PositionalAudio( listener );
+            // load a sound and set it as the PositionalAudio object's buffer
+            function playSound(){
+                var audioLoader = new THREE.AudioLoader();
+                audioLoader.load( 'assets/no-disaster.mp3', function( buffer ) {
+                    sound.setBuffer( buffer );
+                    sound.setRefDistance( 20 );
+                    sound.play();
+                });
+            }
+            // finally add the sound to the mesh
+            knot.add( sound );
+            window.addEventListener("mousedown", playSound);
+            // var raycaster = new THREE.Raycaster();
+            // var mouse = new THREE.Vector2();
+            // function onDocumentMouseDown( event ) {
+            //     event.preventDefault();
+            //     mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+            //     mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+            //     raycaster.setFromCamera( mouse, camera );
+            //     var meshObjects = [knot, knot2];
+            //     var intersects = raycaster.intersectObjects( meshObjects );
+            //     console.log(mouse.x)
+            //     if ( intersects.length > 0 ) {
+            //         intersects[0].object.addEventListener("mousedown", playSound)
+            //         console.log(intersects[0].object)
+            //         console.log(knot)
+            //     }
+            // }
+            // document.addEventListener('mousedown', onDocumentMouseDown, false);
 
         });
+
+
     </script>
 
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <style>
     	body {margin:0px;}
     	canvas {width:100%; height:100%}
+        h1{
+            font-family: fantasy;
+            padding-top:10px;
+        }
     </style>
 </head>
 <body>
+    <h1>Discover which shape the sound is coming from...</h1>
 </body>
 </html>
